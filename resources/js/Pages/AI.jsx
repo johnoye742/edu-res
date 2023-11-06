@@ -3,11 +3,40 @@ import { Head } from '@inertiajs/react'
 import ChatInput from '@/Components/ChatInput'
 import Message from '@/Components/MessageBox'
 import { useRef, useState } from 'react'
+import OpenAI from "openai"
 function AIPage() {
     const [message, setMessage] = useState('Hey')
     const [response, setResponse] = useState('')
     const [history, setHistory] = useState([])
+    const [status, setStatus] = useState('finished')
     const bottom = useRef(null)
+
+    const openai = new OpenAI({
+        apiKey: "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",
+        dangerouslyAllowBrowser: 'true'
+    });
+
+    async function generate(r) {
+        setStatus('loading')
+      const completion = await openai.chat.completions.create({
+        messages: [{ role: 'user', content: message }],
+        model: "gpt-3.5-turbo",
+      });
+
+      console.log(completion)
+
+        let human = {text: message, role: 'human'}
+        let bot = {text: completion.choices[0].message.content, role: 'bot'}
+        history.push(human)
+        history.push(bot)
+        console.log(history)
+        setMessage('')
+        setStatus('finished')
+        bottom.current.scrollIntoView({
+            behaviour: 'smooth'
+        })
+
+    }
 
     async function query(data) {
         const response = await fetch(
@@ -72,9 +101,9 @@ function AIPage() {
                 {history.map((msg, index) => {
                    return (<Message key={crypto.randomUUID()} text={msg.text} role={msg.role}/>)
                 })}
-                <p ref={bottom} className='invisible'>Created</p>
+                <p ref={bottom} className={status == "finished" && 'hidden'}>Generating...</p>
             </div>
-            <ChatInput setMessage={setMessage} message={message} sendMessage={send}></ChatInput>
+            <ChatInput setMessage={setMessage} message={message} sendMessage={generate}></ChatInput>
         </Authenticated>
     )
 }

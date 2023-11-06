@@ -9,7 +9,7 @@ function ChatInput({ setMessage, sendMessage, message }) {
                 <TextInput placeholder="Type a message" onKeyDown={(e) => {
                     if(e.key == "Enter") {
                         setMessage(e.target.value)
-                        sendMessage()
+                        sendMessage('user')
                     }
                  }} onChange={(e) => setMessage(e.target.value)} className="w-full" value={ message }></TextInput>
                 <PrimaryButton onClick={sendMessage}><i className="fi fi-rr-paper-plane-top"></i></PrimaryButton>

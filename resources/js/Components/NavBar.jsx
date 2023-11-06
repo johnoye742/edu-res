@@ -26,7 +26,7 @@ function NavBar({ user }) {
                         <NavLink href={route('landing')} active={route().current('landing')}>Home</NavLink>
                         <NavLink href={route('books')} active={route().current('books')}>Books</NavLink>
                         <NavLink href={route('ai')} active={route().current('ai')}>Support AI</NavLink>
-                        <NavLink href='#' active=''>About Us</NavLink>
+                        <NavLink href={route('about')} active={route().current('about')}>About Us</NavLink>
                     </div>
 
                 </div>

@@ -43,6 +43,9 @@ Route::get('/support-ai', function () {
     return inertia('AI', []);
 }) -> name('ai');
 
+Route::inertia('about-us', 'About')
+-> name('about');
+
 Route::get('/test', function () {
     return Inertia::render('Landing');
 });

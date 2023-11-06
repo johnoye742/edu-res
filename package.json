@@ -20,6 +20,7 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
-        "@flaticon/flaticon-uicons": "^3.0.0"
+        "@flaticon/flaticon-uicons": "^3.0.0",
+        "openai": "^4.15.1"
     }
 }

@@ -1,6 +1,6 @@
 import NavBar from "@/Components/NavBar"
 
-function Guest({ children, user, header }) {
+function Guest({ children, user, header, className }) {
     return (
         <div className="min-h-screen bg-gray-100">
             <NavBar user={user}></NavBar>
@@ -10,7 +10,7 @@ function Guest({ children, user, header }) {
                     <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">{header}</div>
                 </header>
             )}
-            <div className="lg:px-12 px-5 py-10">
+            <div className={className + " lg:px-12 px-5 py-10"}>
                 {children}
             </div>
         </div>
