@@ -1,10 +1,13 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Models\SavedBook;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +27,8 @@ Route::get('/', function () {
 }) -> name('landing');
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    $my_books = SavedBook::all();
+    return Inertia::render('Dashboard', ['my_books' => $my_books]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -34,14 +38,21 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/books', function () {
+    $my_books = SavedBook::all();
     return Inertia::render('Books', [
-        'user' => Auth::user()
+        'user' => Auth::user(),
+        'my_books' => $my_books
     ]);
 }) -> name('books');
 
 Route::get('/support-ai', function () {
-    return inertia('AI', []);
-}) -> name('ai');
+    return inertia('AI', [
+        'aKey' => env('OPEN_API_KEY'),
+        'user' => Auth::user()
+    ]);
+})
+-> name('ai')
+-> middleware('auth');
 
 Route::inertia('about-us', 'About')
 -> name('about');
@@ -49,5 +60,30 @@ Route::inertia('about-us', 'About')
 Route::get('/test', function () {
     return Inertia::render('Landing');
 });
+
+Route::post('/save-book', function (Request $request) {
+
+
+    $validatedData = $request -> validate([
+        'title' => 'required',
+        'cover_id' => 'required',
+        'key' => 'required|unique:saved_books,key,null,id,email,' . $request -> email,
+        'email' => 'required'
+    ]);
+
+    $data = [
+        'name' => $validatedData['title'],
+        'cover_id' => $validatedData['cover_id'],
+        'key' => $validatedData['key'],
+        'email' => $validatedData['email']
+    ];
+
+    $book = new SavedBook($data);
+
+    if($book -> save()) {
+        return redirect() -> back();
+    }
+
+}) -> name('save_book');
 
 require __DIR__.'/auth.php';

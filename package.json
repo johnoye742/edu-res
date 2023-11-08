@@ -21,6 +21,8 @@
     },
     "dependencies": {
         "@flaticon/flaticon-uicons": "^3.0.0",
-        "openai": "^4.15.1"
+        "chart.js": "^4.4.0",
+        "openai": "^4.15.1",
+        "react-chartjs-2": "^5.2.0"
     }
 }

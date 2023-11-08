@@ -28,14 +28,13 @@ function Books({user}) {
 
     }
     useEffect(() => {
-        
         fetch()
-        
-    }, [])
+
+      }, []);
 
 
 
-    const bookList = books.map((book, index) => <BookCard fallback={(<>Loading...</>)} key={book.key} title={book.title} description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate facilis tenetur debitis eveniet totam, sequi cumque alias unde. Debitis mollitia delectus voluptatibus autem cum praesentium reprehenderit velit blanditiis impedit nobis?" link={`https://openlibrary.org${book.key}`} image={`https://covers.openlibrary.org/b/ID/${book.cover_i}-M.jpg`}/>)
+    const bookList = books.map((book, index) => <BookCard fallback={(<>Loading...</>)} key={book.key} title={book.title} book_key={book.key} cover_id={book.cover_i} email={user.email} link={`https://openlibrary.org${book.key}`} image={`https://covers.openlibrary.org/b/ID/${book.cover_i}-M.jpg`}/>)
 
     return (
         <>
