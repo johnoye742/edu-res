@@ -8,32 +8,41 @@ import BookCard from '@/Components/BookCard'
 export default function Dashboard({ auth, my_books }) {
 
     useEffect(() => {
-        const data = [
-            { date: '2 Nov', count: 10 },
-            { date: '3 Nov', count: 20 },
-            { date: '4 Nov', count: 15 },
-            { date: '5 Nov', count: 25 },
-            { date: '6 Nov', count: 22 },
-            { date: '7 Nov', count: 30 },
-            { date: '8 Nov', count: 28 },
-          ];
+      const data = [
+        { date: '2 Nov', count: 10 },
+        { date: '2 Nov', count: 20 },
+        { date: '4 Nov', count: 15 },
+        { date: '5 Nov', count: 25 },
+        { date: '6 Nov', count: 22 },
+        { date: '7 Nov', count: 30 },
+        { date: '8 Nov', count: 28 },
+      ];
 
-          new Chart(
-            document.getElementById('chart'),
-            {
-              type: 'bar',
-              data: {
-                labels: data.map(row => row.date),
-                datasets: [
-                  {
-                    label: 'Monthly Usage',
-                    data: data.map(row => row.count)
-                  }
-                ]
-              }
-            }
-          );
-    }, [])
+      // Use reduce to aggregate data by date
+      const aggregatedData = data.reduce((result, { date, count }) => {
+        if (result[date]) {
+          result[date] += count;
+        } else {
+          result[date] = count;
+        }
+        return result;
+      }, {});
+
+      const aggregatedChartData = {
+        labels: Object.keys(aggregatedData),
+        datasets: [
+          {
+            label: 'Monthly Usage',
+            data: Object.values(aggregatedData),
+          },
+        ],
+      };
+
+      new Chart(document.getElementById('chart'), {
+        type: 'bar',
+        data: aggregatedChartData,
+      });
+    }, []);
 
     const books = my_books.map((book) => <BookCard key={book.key} saved='true' title={book.name} link={`https://openlibrary.org${book.key}`} image={`https://covers.openlibrary.org/b/ID/${book.cover_id}-M.jpg`}/>)
     return (
@@ -56,7 +65,7 @@ export default function Dashboard({ auth, my_books }) {
 
                     <div className="bg-white overflow-hidden p-6 shadow-sm sm:rounded-lg">
                         <h1 className='text-2xl'>Saved Books</h1>
-                        <div className='grid grid-cols-4 gap-3 mt-3'>
+                        <div className='grid grid-cols-2 lg:grid-cols-4 gap-3 mt-3'>
                             { books }
                         </div>
                     </div>

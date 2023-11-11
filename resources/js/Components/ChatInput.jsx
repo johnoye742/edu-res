@@ -9,7 +9,15 @@ function ChatInput({ setMessage, sendMessage, message }) {
                 <TextInput placeholder="Type a message" onKeyDown={(e) => {
                     if(e.key == "Enter") {
                         setMessage(e.target.value)
-                        sendMessage('user')
+                        sendMessage('user').then((res) => {
+                            let frm = new FormData()
+                            frm.append('data', JSON.parse( localStorage.getItem('ai_usage')))
+
+                            fetch(route('save-usage'), {
+                                method: 'POST',
+                                body: frm
+                            }).then((res) => console.log(res.ok))
+                        })
                     }
                  }} onChange={(e) => setMessage(e.target.value)} className="w-full" value={ message }></TextInput>
                 <PrimaryButton onClick={sendMessage}><i className="fi fi-rr-paper-plane-top"></i></PrimaryButton>

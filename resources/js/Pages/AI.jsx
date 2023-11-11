@@ -12,7 +12,8 @@ function AIPage({ aKey, user }) {
     const [status, setStatus] = useState('finished')
     const bottom = useRef(null)
 
-    const localHistory = localStorage.getItem('ai_usage')
+    const localHistory = JSON.parse( localStorage.getItem('ai_usage'))
+    const date = new Date()
 
 
     const openai = new OpenAI({
@@ -21,8 +22,8 @@ function AIPage({ aKey, user }) {
     });
 
     async function generate(r) {
-        if(localHistory != nll)
-        if(localHistory.length > 2) {
+        if(localHistory != null)
+        if(localHistory.length > 5) {
             console.log('exceeded '+ localHistory)
             return
         }
@@ -36,22 +37,23 @@ function AIPage({ aKey, user }) {
 
         console.log(completion)
 
-        let human = {text: message, role: 'human'}
+
+        let human = {text: message, role: 'human', date: date.getDay() + ' ' + date.toLocaleString('default', {month: 'short'})}
         let bot = {text: completion.choices[0].message.content, role: 'bot'}
         history.push(human)
         history.push(bot)
-        localStorage.setItem('ai_usage', history)
-        console.log(history)
+        localStorage.setItem('ai_usage', JSON.stringify(history))
+        console.log(localHistory)
         setMessage('')
         setStatus('finished')
         bottom.current.scrollIntoView({
             behaviour: 'smooth'
         })
 
+
     }
 
-
-
+    
 
 
     return (

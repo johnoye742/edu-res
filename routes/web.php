@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Models\AIUsage;
 use App\Models\SavedBook;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
@@ -28,7 +29,8 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     $my_books = SavedBook::all();
-    return Inertia::render('Dashboard', ['my_books' => $my_books]);
+    $ai_usage = AIUsage::all() -> where('email', Auth::user() -> email);
+    return Inertia::render('Dashboard', ['my_books' => $my_books, 'usage' => $ai_usage]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -61,29 +63,6 @@ Route::get('/test', function () {
     return Inertia::render('Landing');
 });
 
-Route::post('/save-book', function (Request $request) {
 
-
-    $validatedData = $request -> validate([
-        'title' => 'required',
-        'cover_id' => 'required',
-        'key' => 'required|unique:saved_books,key,null,id,email,' . $request -> email,
-        'email' => 'required'
-    ]);
-
-    $data = [
-        'name' => $validatedData['title'],
-        'cover_id' => $validatedData['cover_id'],
-        'key' => $validatedData['key'],
-        'email' => $validatedData['email']
-    ];
-
-    $book = new SavedBook($data);
-
-    if($book -> save()) {
-        return redirect() -> back();
-    }
-
-}) -> name('save_book');
 
 require __DIR__.'/auth.php';
