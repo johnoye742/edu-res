@@ -28,7 +28,7 @@ Route::get('/', function () {
 }) -> name('landing');
 
 Route::get('/dashboard', function () {
-    $my_books = SavedBook::all();
+    $my_books = SavedBook::all() -> where('email', Auth::user() -> email);
     $ai_usage = AIUsage::all() -> where('email', Auth::user() -> email);
     return Inertia::render('Dashboard', ['my_books' => $my_books, 'usage' => $ai_usage]);
 })->middleware(['auth', 'verified'])->name('dashboard');
