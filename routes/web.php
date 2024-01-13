@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,8 +29,8 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     $my_books = SavedBook::all() -> where('email', Auth::user() -> email);
-    $ai_usage = AIUsage::all() -> where('email', Auth::user() -> email);
-    return Inertia::render('Dashboard', ['my_books' => $my_books, 'usage' => $ai_usage]);
+
+    return Inertia::render('Dashboard', ['my_books' => $my_books]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -41,9 +41,10 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/books', function () {
     $my_books = SavedBook::all();
+    Log::debug($my_books -> first());
     return Inertia::render('Books', [
         'user' => Auth::user(),
-        'my_books' => $my_books
+        'my_books' => $my_books -> first()
     ]);
 }) -> name('books');
 

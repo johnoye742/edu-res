@@ -44,7 +44,7 @@ export default function Dashboard({ auth, my_books }) {
       });
     }, []);
 
-    const books = my_books.map((book) => <BookCard key={book.key} saved='true' title={book.name} link={`https://openlibrary.org${book.key}`} image={`https://covers.openlibrary.org/b/ID/${book.cover_id}-M.jpg`}/>)
+    const books = my_books.map((book) => <BookCard key={book.key} saved='true' id={book.id} title={book.name} link={`https://openlibrary.org${book.key}`} image={`https://covers.openlibrary.org/b/ID/${book.cover_id}-M.jpg`}/>)
     return (
         <AuthenticatedLayout
             user={auth.user}

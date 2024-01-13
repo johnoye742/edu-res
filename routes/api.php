@@ -4,6 +4,7 @@ use App\Models\AIUsage;
 use App\Models\SavedBook;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,27 +40,35 @@ Route::post('/save-usage', function (Request $request) {
 }) -> name('save-usage');
 
 Route::post('/save-book', function (Request $request) {
+    Log::debug($request);
 
+    return $request;
+}) -> name('save_book')
+-> middleware('auth');
 
+Route::put('/save', function (Request $request) {
     $validatedData = $request -> validate([
         'title' => 'required',
         'cover_id' => 'required',
-        'key' => 'required|unique:saved_books,key,null,id,email,' . $request -> email,
+        'key' => 'required',
         'email' => 'required'
     ]);
 
-    $data = [
+    $options = [
         'name' => $validatedData['title'],
-        'cover_id' => $validatedData['cover_id'],
         'key' => $validatedData['key'],
+        'cover_id' => $validatedData['cover_id'],
         'email' => $validatedData['email']
     ];
 
-    $book = new SavedBook($data);
+    $book = new SavedBook($options);
 
-    if($book -> save()) {
-        return redirect() -> back();
+    if($book -> save($options)) {
+        return 'fuck yeah';
     }
+}) -> name('save');
 
-}) -> name('save_book')
--> middleware('auth');
+Route::delete('books/{id}', function ($id) {
+    $book = SavedBook::find($id);
+    $book -> delete();
+}) -> name('delete-book');

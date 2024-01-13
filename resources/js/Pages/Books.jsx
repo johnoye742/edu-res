@@ -28,13 +28,13 @@ function Books({user}) {
 
     }
     useEffect(() => {
-        fetch()
+        fetch('Programming')
 
       }, []);
 
 
 
-    const bookList = books.map((book, index) => <BookCard fallback={(<>Loading...</>)} key={book.key} title={book.title} book_key={book.key} cover_id={book.cover_i} email={user.email} link={`https://openlibrary.org${book.key}`} image={`https://covers.openlibrary.org/b/ID/${book.cover_i}-M.jpg`}/>)
+    const bookList = books.map((book, index) => <BookCard fallback={(<>Loading...</>)} key={book.key} title={book.title} book_key={book.key} cover_id={book.cover_i} email={user && user.email} link={`https://openlibrary.org${book.key}`} image={`https://covers.openlibrary.org/b/ID/${book.cover_i}-M.jpg`}/>)
 
     return (
         <>
@@ -44,7 +44,7 @@ function Books({user}) {
                 <Search q={a} setQ={setA} fetch={fetch} className="float-right p-5 flex flex-row gap-2"></Search>
 
                 <div className="grid lg:grid-cols-3 grid-cols-1 px-3 lg:px-0 gap-5" fallback={(<>Loading...</>)}>
-                    { status == 'finished' ? bookList : (<p className="text-2xl">{status}</p>)}
+                    { status == 'finished' ? bookList : (<p className="text-2xl">{status}<br/><p className="text-gray-500 text-sm">{status == 'loading' ? "Check your internet connection" : "This may take a while..."}</p></p>)}
                 </div>
             </GuestLayout>
 
